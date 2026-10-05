@@ -1,32 +1,42 @@
-# StudyLens (Phase 1)
+# StudyLens
 
-StudyLens Phase 1 implements the core local retrieval foundation for a future Streamlit RAG assistant.
+StudyLens is being delivered in six independent, reviewable parts.
 
-## Current Scope
+## Six-part build roadmap
 
-Included in this milestone:
-- PDF/TXT ingestion with page-aware extraction
-- Text cleaning (whitespace normalization, hyphenated line join, repeated header/footer removal)
-- Deterministic chunking with overlap and metadata
-- Local embeddings + FAISS vector index + BM25 keyword index
-- Hybrid retrieval (RRF) and confidence scoring
-- Persistent local index store under `DATA_DIR`
+1. **Usable grounded chat MVP** (this PR): Streamlit UI, uploads, document management, grounded chat, citations, confidence behavior, tests.
+2. **Retrieval quality**: query rewriting improvements, hybrid/RRF tuning, cross-document balancing, evaluation tooling.
+3. **Study tools**: quiz and flashcard generation with strict JSON validation.
+4. **Multilingual explanation experience**: Tamil/Hindi support, same-language answers, style modes.
+5. **Evidence experience**: PDF page rendering, highlighting, source viewer, retrieval comparison tab.
+6. **Production readiness**: robust errors, OCR warnings, security/privacy checks, deployment + CI hardening.
+
+## Current scope (Part 1)
+
+Included:
+- PDF/TXT ingestion, chunking, embeddings, FAISS/BM25 hybrid retrieval (Phase 1 foundation)
+- Streamlit grounded chat UI using uploaded/indexed documents
+- Configurable LLM adapter (`gemini`, `ollama`, `groq`) via environment variables
+- Confidence-gated responses with source snippets and chat history follow-ups
+- Deterministic tests for grounded chat pipeline behaviors
 
 Not included yet:
-- Streamlit chat UX
-- LLM provider integration
-- Quiz generation, highlighting, follow-up rewriting
+- Quiz/flashcard generation
+- Highlighted PDF rendering
+- OCR fallback pipeline
+- Retrieval comparison mode
 
-## Project Structure
+## Project structure
 
-- `/app.py` - placeholder app entrypoint
-- `/config.py` - env-driven settings and pathlib directories
+- `/app.py` - Streamlit app with upload/index/chat flows
+- `/config.py` - env-driven settings
 - `/core/ingestion.py` - extraction, cleaning, chunking
-- `/core/embeddings.py` - cached embedding model + normalized vectors
-- `/core/index_store.py` - persistent index and upload store
-- `/core/retriever.py` - vector/BM25/hybrid retrieval
-- `/core/models.py` - shared dataclasses
-- `/tests` - unit tests for Phase 1 behavior
+- `/core/index_store.py` - persistent indexes/uploads
+- `/core/retriever.py` - hybrid retrieval + confidence
+- `/core/llm.py` - provider-agnostic generation adapter
+- `/core/prompts.py` - grounded/rewrite prompts
+- `/core/chat.py` - grounded chat orchestration
+- `/tests` - unit tests
 
 ## Setup
 
@@ -44,21 +54,22 @@ Not included yet:
    pytest -q
    ```
 
-## Configuration
+## Provider configuration
 
-Key environment variables:
-- `DATA_DIR` (default `./data`)
-- `EMBED_MODEL` (default `paraphrase-multilingual-MiniLM-L12-v2`)
-- `CHUNK_WORDS` (default `150`)
-- `CHUNK_OVERLAP` (default `30`)
-- `TOP_K` (default `4`)
-- `RRF_K` (default `60`)
-- `MIN_CONFIDENCE` (default `0.30`)
+Set these in your shell or `.env`:
+- `LLM_PROVIDER=gemini|ollama|groq`
+- `LLM_MODEL=<model-name>`
+- `GEMINI_API_KEY` (required for Gemini)
+- `GROQ_API_KEY` (required for Groq)
+- `OLLAMA_BASE_URL` (default `http://localhost:11434`)
 
-## Architecture (Phase 1)
+## Run the app
 
-1. **Ingestion**: parse pages from `.pdf`/`.txt`, clean text, remove repeated page edges.
-2. **Chunking**: split into overlapping chunks while preserving `{doc, page, chunk_id}`.
-3. **Indexing**: embed chunks, build FAISS (inner-product) and BM25.
-4. **Retrieval**: vector + BM25 search, merge via reciprocal-rank fusion.
-5. **Persistence**: save chunk metadata, embeddings, FAISS index, doc hashes, and uploads.
+```bash
+streamlit run app.py
+```
+
+## Notes
+
+- Do not commit secrets (`.env` is local-only).
+- The assistant is grounded: it is instructed to avoid outside knowledge and to report when answer support is missing.
