@@ -218,3 +218,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# StudyLens generated knowledge-base artifacts
+/data/*
+!/data/.gitkeep
+
+# Local model/download caches
+*.faiss
+*.npy
