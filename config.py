@@ -18,6 +18,14 @@ TOP_K = int(os.getenv("TOP_K", "4"))
 MIN_CONFIDENCE = float(os.getenv("MIN_CONFIDENCE", "0.30"))
 RRF_K = int(os.getenv("RRF_K", "60"))
 
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "ollama")
+LLM_MODEL = os.getenv("LLM_MODEL", "llama3.1:8b")
+LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "512"))
+MAX_HISTORY_TURNS = int(os.getenv("MAX_HISTORY_TURNS", "6"))
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+
 
 for directory in (DATA_DIR, UPLOADS_DIR, INDEX_DIR):
     directory.mkdir(parents=True, exist_ok=True)
