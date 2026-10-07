@@ -37,7 +37,7 @@ MIN_CONFIDENCE = float(_setting("MIN_CONFIDENCE", "0.30"))
 RRF_K = int(_setting("RRF_K", "60"))
 
 LLM_PROVIDER = _setting("LLM_PROVIDER", "gemini")
-LLM_MODEL = _setting("LLM_MODEL", "gemini-2.0-flash")
+LLM_MODEL = _setting("LLM_MODEL", "gemini-3.5-flash-lite")
 LLM_MAX_TOKENS = int(_setting("LLM_MAX_TOKENS", "512"))
 MAX_HISTORY_TURNS = int(_setting("MAX_HISTORY_TURNS", "6"))
 GEMINI_API_KEY = _setting("GEMINI_API_KEY", "")

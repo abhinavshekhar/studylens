@@ -60,7 +60,7 @@ Online prototype defaults to **Gemini** (no local Ollama required).
 
 Set these in your shell, `.env`, or Streamlit secrets:
 - `LLM_PROVIDER=gemini|groq|ollama` (default: `gemini`)
-- `LLM_MODEL=<model-name>` (default: `gemini-2.0-flash`)
+- `LLM_MODEL=<model-name>` (default: `gemini-3.5-flash-lite`)
 - `GEMINI_API_KEY` (required for Gemini)
 - `GROQ_API_KEY` (required for Groq)
 - `OLLAMA_BASE_URL` (only if using local Ollama)
@@ -78,7 +78,7 @@ streamlit run app.py
 3. Add secrets (see `.streamlit/secrets.toml.example`):
    ```toml
    LLM_PROVIDER = "gemini"
-   LLM_MODEL = "gemini-2.0-flash"
+   LLM_MODEL = "gemini-3.5-flash-lite"
    GEMINI_API_KEY = "your-key"
    ```
 4. Deploy. The app uses cloud Gemini for answers; uploads are stored in the app container (ephemeral on free tier).
