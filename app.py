@@ -70,11 +70,30 @@ def _reset_knowledge_base(store: IndexStore) -> None:
         store.remove_document(str(doc["name"]))
 
 
+def _llm_configured() -> bool:
+    provider = config.LLM_PROVIDER.strip().lower()
+    if provider == "gemini":
+        return bool(config.GEMINI_API_KEY.strip())
+    if provider == "groq":
+        return bool(config.GROQ_API_KEY.strip())
+    if provider == "ollama":
+        return True
+    return False
+
+
 def main() -> None:
     """Render the StudyLens grounded chat experience."""
     st.set_page_config(page_title="StudyLens", page_icon="📚", layout="wide")
     st.title("📚 StudyLens")
     st.caption("Grounded chat over your uploaded study documents")
+    st.caption(f"LLM: {config.LLM_PROVIDER} · {config.LLM_MODEL}")
+
+    if not _llm_configured():
+        st.warning(
+            "Cloud LLM is not configured. Set `GEMINI_API_KEY` (or `GROQ_API_KEY` with "
+            "`LLM_PROVIDER=groq`) in Streamlit secrets or environment variables. "
+            "Document upload and search still work."
+        )
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
