@@ -84,16 +84,33 @@ def _llm_configured() -> bool:
 def main() -> None:
     """Render the StudyLens grounded chat experience."""
     st.set_page_config(page_title="StudyLens", page_icon="📚", layout="wide")
+    config.refresh_settings()
+
     st.title("📚 StudyLens")
     st.caption("Grounded chat over your uploaded study documents")
     st.caption(f"LLM: {config.LLM_PROVIDER} · {config.LLM_MODEL}")
 
     if not _llm_configured():
         st.warning(
-            "Cloud LLM is not configured. Set `GEMINI_API_KEY` (or `GROQ_API_KEY` with "
-            "`LLM_PROVIDER=groq`) in Streamlit secrets or environment variables. "
+            "Cloud LLM is not configured. Chat answers are disabled until an API key is added. "
             "Document upload and search still work."
         )
+        with st.expander("How to enable chat on Streamlit Cloud"):
+            st.markdown(
+                "1. Open your app on [share.streamlit.io](https://share.streamlit.io)\n"
+                "2. Click **Manage app** (bottom right) → **Settings** → **Secrets**\n"
+                "3. Paste this and save (then reboot the app if prompted):\n"
+            )
+            st.code(
+                'LLM_PROVIDER = "gemini"\n'
+                'LLM_MODEL = "gemini-3.5-flash-lite"\n'
+                'GEMINI_API_KEY = "paste-your-key-here"',
+                language="toml",
+            )
+            st.caption(
+                "Get a free key at https://aistudio.google.com/apikey. "
+                "Cursor Cloud Agent secrets are separate and do not apply here."
+            )
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
