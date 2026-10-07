@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib
 import json
 import time
 import urllib.error
@@ -20,6 +21,7 @@ Message = dict[str, str]
 
 def generate(system: str, messages: Sequence[Message], max_tokens: int = 512) -> str:
     """Generate a response using the configured provider and model."""
+    importlib.reload(config)
     config.refresh_settings()
     provider = config.LLM_PROVIDER.strip().lower()
     model = config.LLM_MODEL.strip()

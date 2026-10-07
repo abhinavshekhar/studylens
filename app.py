@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib
 from pathlib import Path
 
 import streamlit as st
@@ -70,6 +71,12 @@ def _reset_knowledge_base(store: IndexStore) -> None:
         store.remove_document(str(doc["name"]))
 
 
+def _refresh_config() -> None:
+    """Reload config module so long-running Streamlit picks up code changes."""
+    importlib.reload(config)
+    config.refresh_settings()
+
+
 def _llm_configured() -> bool:
     provider = config.LLM_PROVIDER.strip().lower()
     if provider == "gemini":
@@ -84,7 +91,7 @@ def _llm_configured() -> bool:
 def main() -> None:
     """Render the StudyLens grounded chat experience."""
     st.set_page_config(page_title="StudyLens", page_icon="📚", layout="wide")
-    config.refresh_settings()
+    _refresh_config()
 
     st.title("📚 StudyLens")
     st.caption("Grounded chat over your uploaded study documents")
