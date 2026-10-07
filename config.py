@@ -42,7 +42,7 @@ def refresh_settings() -> None:
     CHUNK_WORDS = int(_setting("CHUNK_WORDS", "150"))
     CHUNK_OVERLAP = int(_setting("CHUNK_OVERLAP", "30"))
     TOP_K = int(_setting("TOP_K", "4"))
-    MIN_CONFIDENCE = float(_setting("MIN_CONFIDENCE", "0.30"))
+    MIN_CONFIDENCE = float(_setting("MIN_CONFIDENCE", "0.22"))
     RRF_K = int(_setting("RRF_K", "60"))
 
     LLM_PROVIDER = _setting("LLM_PROVIDER", "gemini")

@@ -3,7 +3,9 @@ from __future__ import annotations
 from core.chat import (
     build_context_sources,
     generate_grounded_answer,
+    is_vague_document_question,
     should_rewrite_followup,
+    should_rewrite_query,
     truncate_history,
 )
 from core.models import SearchResult
@@ -31,6 +33,15 @@ def test_should_rewrite_followup_for_short_referential_query() -> None:
     assert not should_rewrite_followup(
         "Please provide a detailed explanation of photosynthesis stages and chlorophyll reactions",
         history,
+    )
+
+
+def test_vague_document_questions_trigger_rewrite() -> None:
+    assert is_vague_document_question("what is inside this")
+    assert is_vague_document_question("what is that")
+    assert should_rewrite_query("what is inside this", [])
+    assert not is_vague_document_question(
+        "Explain the detailed syllabus structure and credit distribution for semester one"
     )
 
 

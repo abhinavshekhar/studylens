@@ -123,14 +123,22 @@ def rrf_merge(rank_lists: list[list[SearchResult]], k: int = 60) -> list[SearchR
 
 
 def confidence(results: list[SearchResult]) -> float:
-    """Estimate confidence from top vector similarity and score gap."""
+    """Estimate confidence from hybrid retrieval signals (vector, RRF, BM25)."""
     if not results:
         return 0.0
 
-    top = float(results[0].vector_score or 0.0)
-    second = float(results[1].vector_score or 0.0) if len(results) > 1 else 0.0
-    gap = max(0.0, top - second)
+    top = results[0]
+    vector_top = float(top.vector_score or 0.0)
+    vector_second = float(results[1].vector_score or 0.0) if len(results) > 1 else 0.0
+    gap = max(0.0, vector_top - vector_second)
 
-    top = min(max(top, 0.0), 1.0)
+    rrf_top = float(top.rrf_score or 0.0)
+    rrf_signal = min(rrf_top / 0.05, 1.0)
+
+    bm25_top = float(top.bm25_score or 0.0)
+    bm25_signal = min(bm25_top / 8.0, 1.0) if bm25_top > 0 else 0.0
+
+    primary = max(vector_top, rrf_signal * 0.9, bm25_signal * 0.75)
+    primary = min(max(primary, 0.0), 1.0)
     gap = min(max(gap, 0.0), 1.0)
-    return round((0.75 * top) + (0.25 * gap), 4)
+    return round((0.7 * primary) + (0.3 * gap), 4)

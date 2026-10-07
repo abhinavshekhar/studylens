@@ -125,6 +125,8 @@ def main() -> None:
             type=["pdf", "txt"],
             accept_multiple_files=True,
         )
+        if uploaded_files:
+            st.caption("Selected files are not searchable until you click **Process uploads**.")
         if st.button("Process uploads", use_container_width=True):
             if uploaded_files:
                 _process_uploads(store, uploaded_files)
