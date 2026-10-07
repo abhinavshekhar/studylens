@@ -71,6 +71,31 @@ Set these in your shell, `.env`, or Streamlit secrets:
 streamlit run app.py
 ```
 
+## Public URL with Cloudflare Tunnel (quick prototype)
+
+For a temporary public link without Streamlit Cloud:
+
+```bash
+bash scripts/install.sh
+bash scripts/start.sh
+```
+
+`scripts/start.sh` starts Streamlit on port `8501` and then launches a **Cloudflare quick tunnel** by default. The public URL is printed in `/tmp/cloudflared-studylens.log` (look for `https://*.trycloudflare.com`).
+
+To run Streamlit only (no tunnel):
+
+```bash
+STUDYLENS_ENABLE_CLOUDFLARE_TUNNEL=false bash scripts/start.sh
+```
+
+Or start the tunnel manually:
+
+```bash
+bash scripts/cloudflare-tunnel.sh
+```
+
+Quick tunnels are for demos; for production use a [named Cloudflare tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/).
+
 ## Deploy online (Streamlit Community Cloud)
 
 1. Push this repo to GitHub.
